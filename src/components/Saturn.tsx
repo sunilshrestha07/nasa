@@ -1,12 +1,12 @@
-'use client';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+"use client";
 
-import { Canvas, useFrame } from '@react-three/fiber';
-import React, { useRef, useState } from 'react';
-import { Sat } from './Sat';
-import Jup from './Jup'
-import { Environment, OrbitControls } from '@react-three/drei';
-import { useSpring, a } from '@react-spring/three';
-import { Model } from './Model';
+import * as THREE from "three";
+import { useFrame } from "@react-three/fiber";
+import React, { useRef, useState } from "react";
+import { Sat } from "./Sat";
+import { useSpring, a } from "@react-spring/three";
 
 export default function Saturn() {
     const [scale, setScale] = useState(1);
@@ -22,47 +22,35 @@ export default function Saturn() {
     const { animatedScale } = useSpring({
         animatedScale: scale,
         config: {
-            duration: 1000
-        }
+            duration: 600,
+        },
     });
 
     // Handle animation for position shifting
     const { animatedPosition } = useSpring({
-        animatedPosition: isZoomed ? [-4, 0, 0] : [0, 0, 0],
+        animatedPosition: isZoomed ? [-4, 0, 0] : [-1.5, 0, 0],
         config: {
-            duration: 1000
+            duration: 600,
+        },
+    });
+
+    const modelRef = useRef<THREE.Mesh>(null);
+
+    useFrame((state, delta) => {
+        if (modelRef.current) {
+            modelRef.current.rotation.y += 0.005;
         }
     });
 
-    // Model for Saturn
-    const SaturnModel = () => {
-        const modelRef = useRef<any>(null);
-
-        useFrame((state, delta) => {
-            if (modelRef.current) {
-                modelRef.current.rotation.y += delta;
-            }
-        });
-
-        return (
-            <a.mesh
-                ref={modelRef}
-                rotation={[0.2, 0, 0]}
-                position={animatedPosition}
-                scale={animatedScale}
-                onClick={handleClick}
-            >
-                <Sat />
-            </a.mesh>
-        );
-    };
-
     return (
-        <Canvas camera={{ position: [0, 0, 10], fov: 30 }}>
-            <OrbitControls enableZoom={false} />
-            <ambientLight />
-            <SaturnModel />
-            <Environment preset="sunset" />
-        </Canvas>
+        <a.mesh
+            ref={modelRef}
+            rotation={[0.2, 0, -0.2]}
+            position={animatedPosition.to((x, y, z) => [x, y, z] as [number, number, number])}
+            scale={animatedScale}
+            onClick={handleClick}
+        >
+            <Sat />
+        </a.mesh>
     );
 }
