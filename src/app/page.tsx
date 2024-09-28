@@ -9,13 +9,13 @@ import SaturnNew from "./newModels/Saturn";
 import Saturn from "@/components/Saturn";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
-import Earth from "@/components/Earth";
 import Image from "next/image";
 import bg from "../../public/images/bg.jpeg";
-import { Saturn2 } from "@/examplePlanets/Saturn2";
+import Earth from "@/components/Earth";
 
 export default function page() {
     // const allPlanets = [
+
     //     { name: "Mercury", component: <Saturn />, top: 0, right: 0 },
     //     { name: "Venus", component: <Scene />, top: 0, right: 0 },
     //     { name: "Saturn", component: <Saturn />, top: 0, right: 200 },
@@ -33,13 +33,15 @@ export default function page() {
                 />
 
                 <Canvas camera={{ position: [0, 0, 10], fov: 30 }}>
-                    <OrbitControls enableZoom={false} />
+                    <OrbitControls enableZoom={true} enableRotate={true} />
 
                     <spotLight position={[10, 1, 5]} angle={0.15} penumbra={0.5} intensity={1.5} />
                     <pointLight position={[10, 1, 10]} decay={0} intensity={1} />
 
-                    <Saturn />
-                    <Saturn2 />
+                    <ambientLight intensity={2} />
+                    {/* <Saturn /> */}
+                    {/* <Saturn2 /> */}
+                    <Earth />
                 </Canvas>
             </div>
         </>
