@@ -28,7 +28,7 @@ export default function page() {
       <div className="w-full h-full overflow-y-hidden">
         <div className=" w-[100vw] h-[100vh] bg-black relative">
           <Canvas camera={{ position: [0, 0, 10], fov: 30 }}>
-            <OrbitControls enableZoom={true} enableRotate={true} />
+            <OrbitControls enableZoom={false} enableRotate={true} />
 
             <spotLight
               position={[10, 1, 5]}
