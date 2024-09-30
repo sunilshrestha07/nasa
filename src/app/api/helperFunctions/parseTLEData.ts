@@ -30,9 +30,7 @@ export default function parseTLEData(tleData: string): SatelliteData[] {
             const tleLine2 = line2.trim();
 
             // Use tle.js to get satellite position
-            const satInfo = getSatelliteInfo([name, tleLine1, tleLine2], new Date(), {
-                highAccuracy: true,
-            });
+            const satInfo = getSatelliteInfo([name, tleLine1, tleLine2], Date.now(), 0);
 
             satellites.push({
                 name,

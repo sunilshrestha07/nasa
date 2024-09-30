@@ -4,7 +4,6 @@
 import Scene from "@/components/Scene";
 import React, { Suspense } from "react";
 import { motion } from "framer-motion";
-import SaturnNew from "./newModels/Saturn";
 // import EarthNew from "../../public/earth/EarthNew";
 import Saturn from "@/components/Saturn";
 import { Canvas } from "@react-three/fiber";
@@ -54,9 +53,9 @@ export default function page() {
                     <Earth />
                 </Canvas>
                 {/* <img className="w-full h-full object-cover" src="./images/bg.jpeg" alt="" /> */}
-                <div className="w-full h-full bg-transparent absolute top-0 left-0">
+                {/* <div className="w-full h-full bg-transparent absolute top-0 left-0">
                     <MainScene />
-                </div>
+                </div> */}
             </div>
         </>
     );
