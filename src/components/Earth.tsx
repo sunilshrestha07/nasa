@@ -54,12 +54,12 @@ export default function Earth(props) {
     };
 
     // All active satellites
-    const getActive = async () => {
-        const recent = await fetch("/activeSatellites.json");
-        const recentBody = await recent.json();
-        const parsedData = getSpaceObjectPositionsForThreeFiber(recentBody);
-        setSatellites(parsedData);
-    };
+    // const getActive = async () => {
+    //     const recent = await fetch("/activeSatellites.json");
+    //     const recentBody = await recent.json();
+    //     const parsedData = getSpaceObjectPositionsForThreeFiber(recentBody);
+    //     setSatellites(parsedData);
+    // };
 
     // Iss Position
     const getISS = async () => {
@@ -72,7 +72,8 @@ export default function Earth(props) {
 
     useEffect(() => {
         if (earthRef.current) {
-            getActive();
+            // getActive();
+            getRecentlyLaunched();
         }
     }, []);
 
