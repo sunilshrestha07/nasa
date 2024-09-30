@@ -12,6 +12,7 @@ import { OrbitControls } from "@react-three/drei";
 import Image from "next/image";
 import bg from "../../public/images/bg.jpeg";
 import Earth from "@/components/Earth";
+import MainScene from "@/components/MainScene";
 
 export default function page() {
     const handleDBUpdate = async () => {
@@ -25,7 +26,7 @@ export default function page() {
 
     return (
         <>
-            <div className=" w-[100vw] h-[100vh] bg-black">
+            <div className=" w-[100vw] h-[100vh] bg-black relative">
                 {/* <div className="h-[85vh] w-[100vw] bg-black">
                     <button
                         className="px-8 py-4 mt-[10vh] ml-[45vw] bg-red-500 text-white rounded-lg "
@@ -52,6 +53,10 @@ export default function page() {
                     {/* <Saturn2 /> */}
                     <Earth />
                 </Canvas>
+                {/* <img className="w-full h-full object-cover" src="./images/bg.jpeg" alt="" /> */}
+                <div className="w-full h-full bg-transparent absolute top-0 left-0">
+                    <MainScene />
+                </div>
             </div>
         </>
     );
