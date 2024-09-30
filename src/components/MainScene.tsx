@@ -1,21 +1,50 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-"use client";
+'use client';
 
-import { Canvas } from "@react-three/fiber";
-import React, { useState } from "react";
-import { Sat } from "./Sat";
-import { Model } from "./Model";
-import { Environment, Text } from "@react-three/drei";
-import { useSpring, animated } from "@react-spring/three";
+import { Canvas } from '@react-three/fiber';
+import React, { useState } from 'react';
+import { Sat } from './Sat';
+import { Model } from './Model';
+import { Environment, Text } from '@react-three/drei';
+import { useSpring, animated } from '@react-spring/three';
 
 export default function MainScene() {
   const initialModels = [
-    { id: 0, type: "saturn", position: [-5, 0, 0], model: <Sat /> },
-    { id: 1, type: "saturn", position: [-1, 0, 0], model: <Sat /> },
-    { id: 2, type: "planet", position: [3, 0, 0], model: <Sat /> },
-    { id: 3, type: "planet", position: [5, 0, 0], model: <Sat /> },
-    { id: 4, type: "planet", position: [7, 0, 0], model: <Sat /> },
-    { id: 5, type: "planet", position: [9, 0, 0], model: <Sat /> },
+    {
+      id: 0,
+      type: 'saturn',
+      position: [-5, 0, 0] as [number, number, number],
+      model: <Sat />,
+    },
+    {
+      id: 1,
+      type: 'saturn',
+      position: [-1, 0, 0] as [number, number, number],
+      model: <Sat />,
+    },
+    {
+      id: 2,
+      type: 'planet',
+      position: [3, 0, 0] as [number, number, number],
+      model: <Sat />,
+    },
+    {
+      id: 3,
+      type: 'planet',
+      position: [5, 0, 0] as [number, number, number],
+      model: <Sat />,
+    },
+    {
+      id: 4,
+      type: 'planet',
+      position: [7, 0, 0] as [number, number, number],
+      model: <Sat />,
+    },
+    {
+      id: 5,
+      type: 'planet',
+      position: [9, 0, 0] as [number, number, number],
+      model: <Sat />,
+    },
   ];
 
   const [clickedModel, setClickedModel] = useState<number | null>(null);
@@ -36,13 +65,20 @@ export default function MainScene() {
   const updateModelPositions = (selectedId: number) => {
     const newModels = initialModels.map((model) => {
       if (model.id < selectedId) {
-        return { ...model, position: [-10, 0, 0] };
+        // Move models with id less than the selected one to the left (off-screen)
+        return { ...model, position: [-10, 0, 0] as [number, number, number] };
       } else if (model.id === selectedId) {
-        return { ...model, position: [-6, 0, 0] };
+        // Keep the selected model at the center
+        return { ...model, position: [-6, 0, 0] as [number, number, number] };
       } else {
+        // Move models with id greater than the selected one to the right, with some distance
         return {
           ...model,
-          position: [(model.id - selectedId) * 2, 0, 0],
+          position: [(model.id - selectedId) * 2, 0, 0] as [
+            number,
+            number,
+            number
+          ],
         };
       }
     });
@@ -50,7 +86,7 @@ export default function MainScene() {
   };
 
   return (
-    <div className="w-full h-screen flex flex-row">
+    <div className=" w-full h-screen flex flex-row ">
       <Canvas camera={{ position: [0, 0, 10], fov: 45 }}>
         <ambientLight intensity={0.2} />
         <spotLight
@@ -60,7 +96,6 @@ export default function MainScene() {
           intensity={1.5}
         />
         <pointLight position={[10, 5, 10]} decay={0} intensity={1} />
-
         {models.map((model, index) => (
           <ModelWithAnimation
             key={model.id}
@@ -72,11 +107,12 @@ export default function MainScene() {
           />
         ))}
       </Canvas>
+
     </div>
   );
 }
 
-// Component for animated models
+// Separate component for the animated model with spring animation
 interface ModelProps {
   model: JSX.Element;
   position: [number, number, number];
@@ -92,19 +128,20 @@ function ModelWithAnimation({
   onClick,
   index,
 }: ModelProps) {
-  // Spring animations for position and scale
-  const springProps = useSpring({
+  // useSpring for animating the position and scale
+  const { animatedPosition, animatedScale } = useSpring({
     animatedPosition: position,
     animatedScale: isSelected ? [2, 2, 2] : [0.5, 0.5, 0.5],
-    config: { mass: 1, tension: 170, friction: 26 },
+    config: { mass: 1, tension: 170, friction: 26 }, // Adjust animation config for smoothness
   });
 
+  // Convert spring values to spreadable values for three.js props
   return (
     <animated.mesh
-      position={springProps.animatedPosition} // Apply spring animated position
-      scale={springProps.animatedScale} // Apply spring animated scale
-      onClick={onClick}
-      rotation={[0.3, 0, 0]}
+      position={animatedPosition.to((x, y, z) => [x, y, z])} // Convert spring values to position
+      scale={animatedScale.to((sx, sy, sz) => [sx, sy, sz])} // Convert spring values to scale
+      onClick={onClick} // Handle click event
+      rotation={[0.3, 0, 0]} // Optional static rotation
     >
       {model}
       <Text position={[0, 1.5, 0]} fontSize={0.5} color="white">
