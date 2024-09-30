@@ -1,12 +1,11 @@
 'use client';
 
-import { Canvas, useThree } from '@react-three/fiber';
-import React, { useState, useRef } from 'react';
+import { Canvas } from '@react-three/fiber';
+import React, { useState } from 'react';
 import { Sat } from './Sat';
 import { Model } from './Model';
-import { Environment, Text, useHelper } from '@react-three/drei';
+import {  Text } from '@react-three/drei';
 import { useSpring, animated } from '@react-spring/three';
-import { CameraHelper } from 'three';
 import ModelInfo from './ModelInfo';
 
 export default function MainScene() {
