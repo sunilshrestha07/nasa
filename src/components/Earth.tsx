@@ -104,7 +104,7 @@ export default function Earth(props) {
                                 scale={0.01}
                             >
                                 <boxGeometry />
-                                <meshStandardMaterial color={"orange"} />
+                                <meshStandardMaterial color={"white"} />
                             </animated.mesh>
                         );
                     })}
