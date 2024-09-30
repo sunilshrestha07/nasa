@@ -1,18 +1,27 @@
-import React, { useRef, useState } from "react";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useEffect, useRef, useState } from "react";
 import { useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { Bloom, EffectComposer } from "@react-three/postprocessing";
 import * as THREE from "three";
 import { animated, useSpring } from "@react-spring/three";
-import LatLongFinder from "@/app/helperFunctions/LatLongFinder";
+import { getSpaceObjectPositionsForThreeFiber } from "@/app/frontendHalperFunctions/ISSPosCalculator";
+
+export type SatelliteData = {
+    name: string;
+    position: [number, number, number];
+};
 
 export default function Earth(props) {
-    const { nodes, materials } = useGLTF("/earth.glb");
     const earthRef = useRef<THREE.Mesh>(null);
-    const satellite1Ref = useRef<THREE.Mesh>(null);
+    const satellitesRef = useRef<THREE.Group>(null);
     const [isZoomed, setIsZoomed] = useState(false);
+    const [satellites, setSatellites] = useState<SatelliteData[]>();
 
-    // Handle click and make model scale bigger
+    // Handle click and make model scale biggerimport { useGLTF, GLTFResult } from "@react-three/drei";
+
+    const { nodes, materials } = useGLTF("/earth.glb") as any;
     const handleClick = () => {
         setIsZoomed(!isZoomed);
     };
@@ -25,22 +34,48 @@ export default function Earth(props) {
 
     const { scale } = useSpring({
         //   scale: isZoomed ? 0.0045 : 0.0025,
-        scale: 0.6,
+        scale: 0.8,
         config: { duration: 600 },
     });
 
     useFrame(() => {
-        if (earthRef.current) {
-            // earthRef.current.rotation.y += 0.0015;
+        if (earthRef.current && satellitesRef.current) {
+            earthRef.current.rotation.y -= 0.003;
+            satellitesRef.current.rotation.y -= 0.003;
         }
     });
 
-    const { satellitePosition } = useSpring({
-        satellitePosition: LatLongFinder(8.661779, -81.471264, 1.65),
-        config: {
-            duration: 600,
-        },
-    });
+    // Recently launched satellites
+    const getRecentlyLaunched = async () => {
+        const recent = await fetch("/30DaysLaunch.json");
+        const recentBody = await recent.json();
+        const parsedData = getSpaceObjectPositionsForThreeFiber(recentBody);
+        setSatellites(parsedData);
+    };
+
+    // All active satellites
+    const getActive = async () => {
+        const recent = await fetch("/activeSatellites.json");
+        const recentBody = await recent.json();
+        const parsedData = getSpaceObjectPositionsForThreeFiber(recentBody);
+        setSatellites(parsedData);
+    };
+
+    // Iss Position
+    const getISS = async () => {
+        const iss = await fetch("/ISS.json");
+        const issBody = await iss.json();
+        console.log(issBody);
+        const parsedISSData = getSpaceObjectPositionsForThreeFiber(issBody);
+        setSatellites(parsedISSData);
+    };
+
+    useEffect(() => {
+        if (earthRef.current) {
+            getActive();
+        }
+    }, []);
+
     return (
         <>
             <group {...props} dispose={null}>
@@ -48,7 +83,7 @@ export default function Earth(props) {
                     ref={earthRef}
                     castShadow
                     receiveShadow
-                    geometry={nodes.earth001.geometry}
+                    geometry={nodes.earth001.geometry as THREE.BufferGeometry}
                     material={materials["Default OBJ.001"]}
                     position-x={positionX}
                     scale={scale}
@@ -56,17 +91,35 @@ export default function Earth(props) {
                     rotation={[0, Math.PI / 2.5, 0.2]}
                 />
 
-                <animated.mesh
+                <group ref={satellitesRef}>
+                    {satellites?.map((sat, index) => {
+                        // console.log(satellitePosition);
+                        return (
+                            <animated.mesh
+                                key={index}
+                                name={sat.name}
+                                // ref={satellite1Ref}
+                                geometry={nodes.box}
+                                position={sat.position}
+                                scale={0.01}
+                            >
+                                <boxGeometry />
+                                <meshStandardMaterial color={"orange"} />
+                            </animated.mesh>
+                        );
+                    })}
+                </group>
+                {/* <animated.mesh
                     ref={satellite1Ref}
-                    position={satellitePosition.to(
-                        (x, y, z) => [x, y, z] as [number, number, number]
-                    )}
-                    scale={0.05}
+                    geometry={nodes.box}
+                    position={[3, 0, 0]}
+                    scale={0.1}
                 >
                     <boxGeometry />
                     <meshStandardMaterial color={"orange"} />
-                </animated.mesh>
+                </animated.mesh> */}
             </group>
+
             <EffectComposer>
                 <Bloom
                     intensity={0.5}

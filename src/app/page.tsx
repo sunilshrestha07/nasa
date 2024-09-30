@@ -14,23 +14,32 @@ import bg from "../../public/images/bg.jpeg";
 import Earth from "@/components/Earth";
 
 export default function page() {
-    // const allPlanets = [
+    const handleDBUpdate = async () => {
+        console.log("Updating DB...");
+        const response = await fetch("/api/updateDB", {
+            method: "GET",
+        });
+        const data = await response.json();
+        console.log(data);
+    };
 
-    //     { name: "Mercury", component: <Saturn />, top: 0, right: 0 },
-    //     { name: "Venus", component: <Scene />, top: 0, right: 0 },
-    //     { name: "Saturn", component: <Saturn />, top: 0, right: 200 },
-    //     { name: "Earth", component: <Scene />, top: 0, right: 200 },
-    //     { name: "Jupiter", component: <Saturn />, top: 0, right: 200 },
-    // ];
     return (
         <>
-            <div className=" w-[100vw] h-[100vh] ">
-                <div className="h-[85vh] w-[100vw] bg-black"></div>
-                <Image
+            <div className=" w-[100vw] h-[100vh] bg-black">
+                {/* <div className="h-[85vh] w-[100vw] bg-black">
+                    <button
+                        className="px-8 py-4 mt-[10vh] ml-[45vw] bg-red-500 text-white rounded-lg "
+                        onClick={handleDBUpdate}
+                    >
+                        UpdateDB
+                    </button>
+                </div> */}
+
+                {/* <Image
                     src={bg}
                     alt="star background"
                     className="h-full w-full object-cover absolute brightness-90"
-                />
+                /> */}
 
                 <Canvas camera={{ position: [0, 0, 10], fov: 30 }}>
                     <OrbitControls enableZoom={true} enableRotate={true} />
