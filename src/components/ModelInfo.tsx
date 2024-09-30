@@ -45,7 +45,7 @@ export default function ModelInfo({ name }: ModelInfoProps) {
             </div>
           ))
         ) : (
-          <div>No planet found with the name "{name}".</div>
+          <div>No planet found with the name {name}.</div>
         )}
       </div>
     </div>
