@@ -21,7 +21,7 @@ export function Sat(props: any) {
                             <group name="RootNode">
                                 <group
                                     name="Saturn_Rings"
-                                    // rotation={[-Math.PI / 2, 0, 0]}
+                                    rotation={[-Math.PI / 2, 0, 0]}
                                     scale={100}
                                 >
                                     <mesh
