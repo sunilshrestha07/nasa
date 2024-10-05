@@ -18,7 +18,9 @@ async function dbConnect() {
     }
 
     try {
-        const db = await mongoose.connect(MONGODB_URI);
+        const db = await mongoose.connect(MONGODB_URI, {
+            dbName: "nasa",
+        });
         connection.isConnected = db.connections[0].readyState;
         console.log("Connected to MongoDB");
     } catch (error) {
